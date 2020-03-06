@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Progressbar - Default functionality</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script>
+
+        function progress_bar() {
+            $(document).ready(function () {
+                $("#progressbar, #percentage_bar").css("display", "block");
+                $.ajax({
+                    type: 'POST',
+                    url: "data.txt",
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.addEventListener("progress", function (evt) {
+                            // console.log("Event :" + evt.lengthComputable);
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                //Do something with download progress
+                                var percent = percentComplete * 100;
+                                var finalval = Math.round(percent);
+
+                                $(function () {
+                                    $("#progressbar").progressbar({
+                                        value: finalval
+                                    });
+                                    // document.getElementById("percentage_bar").innerHTML = finalval + "%";
+                                    $("#percentage_bar").text(finalval + "%");
+                                });
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function (data) {
+                        //Do something success
+                    }
+                });
+            });
+            $("#progressbar, #percentage_bar").css("display", "none");
+        }
+
+
+    </script>
+    <style>
+        #loaded_data {
+            color: red;
+            width: 70%;
+            height: 400px;
+            padding: 20px;
+            margin-left: 50%;
+            margin-top: 50px;
+            overflow: hidden;
+            transform: translateX(-50%);
+            border: 2px solid blue;
+        }
+
+        #progressbar, #percentage_bar {
+            display: none;
+            width: 200px;
+            height: 26px;
+            padding: 0;
+            margin: 0;
+        }
+
+        #progressbar {
+            padding: 4px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            border: 2px solid rgba(17, 100, 77, 1);
+            border-radius: 5px;
+        }
+
+        #percentage_bar {
+            margin-top: 5px;
+            font-family: Calibri, monospace;
+            color: rgba(17, 100, 77, 1);
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .ui-progressbar-value {
+            height: 14px !important;
+            background: rgba(17, 100, 77, 1);
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div id="loaded_data">
+    <!--    <form action="progressbarjquery1.html">-->
+    <button onclick="progress_bar()">ClickMe</button>
+    <!--    </form>-->
+    <br><br><br><br><br>
+    <div id="progressbar"></div>
+    <div id="percentage_bar"></div>
+    <div id="data"></div>
+
+
+</div>
+
+</body>
+</html>
